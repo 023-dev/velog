@@ -1,10 +1,9 @@
 name: Update Blog Posts
-  
 
 on:
   push:
-      branches:
-        - main  # 또는 워크플로우를 트리거하고 싶은 브랜치 이름
+    branches:
+      - main
   schedule:
     - cron: '0 0 * * *'  # 매일 자정에 실행
 
@@ -13,23 +12,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-    - name: Push changes
-      run: |
-        git config --global user.name 'github-actions[bot]'
-        git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-        git push https://${{ secrets.GH_PAT }}@github.com/rimgosu/velog.git
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
 
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.x'
+      - name: Install dependencies
+        run: |
+          pip install feedparser gitpython
 
-    - name: Install dependencies
-      run: |
-        pip install feedparser gitpython
-
-    - name: Run script
-      run: python scripts/update_blog.py
+      - name: Run script to update blog
+        run: python .github/scripts/update_blog.py
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}
