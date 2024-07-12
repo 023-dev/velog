@@ -1,30 +1,26 @@
-name: Update Blog Posts
+name: Update Blog
 
-on:
-  push:
-    branches:
-      - main
-  schedule:
-    - cron: '0 0 * * *'  # 매일 자정에 실행
+on: [push, pull_request]
 
 jobs:
   update_blog:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+    - name: Checkout repository
+      uses: actions/checkout@v2
 
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.x'
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.12'
 
-      - name: Install dependencies
-        run: |
-          pip install feedparser gitpython
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
 
-      - name: Run script to update blog
-        run: python .github/scripts/update_blog.py
-        env:
-          GH_PAT: ${{ secrets.GH_PAT }}
+    - name: Run update_blog.py script
+      run: python .github/scripts/update_blog.py
+      env:
+        GH_PAT: ${{ secrets.GH_PAT }}
