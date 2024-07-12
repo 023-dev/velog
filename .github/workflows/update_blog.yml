@@ -21,6 +21,6 @@ jobs:
         pip install -r requirements.txt
 
     - name: Run update_blog.py script
-      run: python .github/scripts/update_blog.py
+      run: python ./scripts/update_blog.py
       env:
         GH_PAT: ${{ secrets.GH_PAT }}
